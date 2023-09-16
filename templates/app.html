@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ImageFix</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+	<div id="hero">
+		<div id="header">
+			<span id="title">ImageFix</span>
+			<span id="subtitle">AI-powered face and signature recogniser</span>
+		</div>
+		<div class="content">
+			<div id="left">
+				<span class="ft">Features:</span>
+				<ul id="features">
+					<li class="ftr">Accurate detection of face and signature images</li>
+					<li class="ftr">Prevention of faulty Admit Card generation</li>
+					<li class="ftr">Age verification for passport images</li>
+					<li class="ftr">Auto detection of images in respective fields and rearranging accurately</li>
+				</ul>
+				<span class="ft">Requirements/ precautions:</span>
+				<ul id="requirements">
+					<li class="req">Image formats: png, jpg, jpeg <a href="https://cloudconvert.com/image-converter">(link to converter)</a></li>
+					<li class="req">Avoid blurry, unclear, distorted images</li>
+					<li class="req">Avoid object images</li>
+					<li class="req">Sample images
+						<div>
+							<img src="{{ url_for('static', filename='images/face_sample.jpg') }}" alt="face_sample">
+							<img src="{{ url_for('static', filename='images/sign_sample.jpg') }}" alt="sign_sample">
+						</div>
+					</li>
+				</ul>
+				<div class="sample"></div>
+			</div>
+
+			<div id="right">
+				<img src="{{ url_for('static', filename='images/wrong.jpg') }}" alt="wrong_admit">
+				<img src="{{ url_for('static', filename='images/right.jpg') }}" alt="right_admit">
+			</div>
+			
+			
+		</div>
+		<a href="#app" id="btn"><img src="{{ url_for('static', filename='images/arrow.png') }}" alt="arrow_down"></a>
+	</div>
+	<div id="app">
+		<h1>Get started,</h1>
+		<h2>Upload images below</h2>
+		<form method="post" action="{{ url_for('results') }}" enctype="multipart/form-data">
+				<label for="image1">Passport Image:</label>
+				<input type="file" id="image1" name="image1" required>
+				<label for="image2">Signature Image:</label>
+				<input type="file" id="image2" name="image2" required>
+				<input type="submit" value="Submit">
+		</form>
+
+		<div id="popup" class="hidden">
+			<h1 id="result_header">Results</h1>
+			<div id="errorbox">{{error_msg}}</div>
+			<div class = "c1">
+				<div id="closebtn">Back to input</div>
+				<div class="in1">
+					<h4>{{label1}}</h4>
+					<div class="resultbox"><img src="{{ file1_url }}" alt="Image 1" id="face_img"></div>
+				</div>
+				<div class="in1">
+				<h4>{{label2}}</h4>
+				<div class="resultbox"><img src="{{ file2_url }}" alt="Image 2" id="sign_img"></div>
+				</div>
+				<!-- <div id="errorcode">{{error_code}}</div> -->
+			</div>
+		</div>
+	</div>
+
+</body>
+
+<script>
+	
+	popup.classList.remove('hidden')
+	let formats = ['.jpg','.png', '.jpeg', '.bmp', '.webp']
+	if(
+		((formats.includes(face_img.src.toString().slice(face_img.src.toString().lastIndexOf('.')))) | 
+		(formats.includes(sign_img.src.toString().slice(sign_img.src.toString().lastIndexOf('.'))))))
+		{
+		if(errorbox.innerText == ''){errorbox.style.display = 'none'}
+		else{errorbox.style.display = 'flex'}
+		popup.classList.remove('hidden')
+		document.getElementsByTagName('html')[0].style.overflowY = 'hidden'
+		window.scrollTo(0,0)
+	}
+	else{
+		popup.classList.add('hidden')
+		document.getElementsByTagName('html')[0].style.overflowY = 'scroll'
+	}
+
+	let hero = document.getElementById('hero')
+
+	closebtn.addEventListener('click',()=>{
+		popup.classList.add('hidden')
+		image1.value = null
+		image2.value = null
+		document.getElementsByTagName('html')[0].style.overflowY = 'scroll'
+		window.scrollTo(0,hero.offsetHeight)
+	})
+
+
+	let im1 = document.getElementById('image1')
+	let im2 = document.getElementById('image2')
+
+	im1.onchange = ()=>{
+		if(!formats.includes(im1.value.slice(im1.value.lastIndexOf('.'),))){
+			alert('Please select valid format')
+			im1.value = null
+		}
+	}
+	im2.onchange = ()=>{
+		if(!formats.includes(im2.value.slice(im2.value.lastIndexOf('.'),))){
+			alert('Please select valid format')
+			im2.value = null
+		}
+	}
+
+
+</script>
+
+</html>
